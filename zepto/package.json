@@ -11,7 +11,7 @@
     "repository": "madrobby/zepto",
     "license": "MIT",
     "devDependencies": {
-        "uglify-js": "2.4.x",
+        "uglify-js": "2.6.x",
         "express": "3.1.x",
         "coffee-script": "1.5.x",
         "shelljs": "0.1.x"
