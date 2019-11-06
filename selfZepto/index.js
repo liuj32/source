@@ -65,7 +65,7 @@ var Zepto = (function(){
 		}
 
 		function isFuntion(value){ return type(value) == 'function'}
-		function isWindow(obj) { return obj !=null && obj = obj.window }
+		function isWindow(obj) { return obj !=null && obj == obj.window }
 		function isDocument(obj) { return obj !=null &&obj.nodeType == obj.DOCUMENT_NODE}
 		function isObject(obj) { return type(obj) == 'object'}
 		function isPlainObject(obj) {
@@ -91,7 +91,7 @@ var Zepto = (function(){
 							.replace(/_/g, '-')
 							.toLowerCase()
 		}
-		uniq = function(array){return filter.call(array, function(item, idx){ return array.indexOf(itme) == idx})}
+		uniq = function(array){return filter.call(array, function(item, idx){ return array.indexOf(item) == idx})}
 
 		function classRE(name){
 			return name in classCache ? 
@@ -128,7 +128,7 @@ var Zepto = (function(){
 			this.selector = selector || '';
 		}		
 
-		zepto.fragment = function(html, name, properties){
+		zepto.fragment = function(html, name, properties){ 
 			var dom, nodes, container 
 
 			if(singleTagRE.test(html)) dom = $(document.createElement(RegExp.$1))
@@ -215,6 +215,85 @@ var Zepto = (function(){
 			args.forEach(function(arg){ extend(target, arg, deep)})
 			return target;
 		}	
+
+		zepto.qsa = function(element, selector){
+			var found,
+					maybeID = selector[0] == '#',
+					maybeClass = !selector && selector[0] == '.',
+					nameOnly = maybeID || maybeClass ? selector.slice(1) : selector,
+					isSimple = simpleSelectorRE.test(nameOnly)
+			return (element.getElementById && isSimple && maybeID) ? 
+				( (found = element.getElementById(nameOnly)) ? [found] : []) : 
+				(element.nodeType !== 1 && element.nodeType !== 9 && element.nodeType ！== 11) ? [] : 
+				slice.call(
+					isSimple && !maybeID && element.getElementsByClassName ? 
+						maybeClass ? element.getElementsByClassName(nameOnly) :
+							element.getElementsByTagName(selector) : 
+							element.querySlectorAll(selector)
+				)
+		}
+
+		function  filtered(nodes, selector){
+			return selector == null ? $(nodes) : $(nodes).filter(selector)
+		}
+
+		$.contains = document.documentElement.contains ? 
+			function(parent, node){
+				return parent !== node && parent.contains(node)
+			} :
+			function(parent, node){
+				while(node && (node = node.parentNode))
+					if(node == parent) return true;
+				return false;
+			}
+
+			function funcArg(context, arg, idx, payload){
+				return isFuntion(arg) : arg.call(context, idx, payload) : arg;
+			}
+
+			function setAttribute(node ,name, value){
+				value == null ? node.removeAttribute(name) : node.setAttribute(name, value);
+			}
+
+			function className(node ,value){
+				var klass = node.className || '',
+						svg = klass && klass.baseVal !== undefined
+
+					if(value == undefined)  return svg ? klass.baseVal : klass
+					svg ?  (klass.baseVal = value) : (node.className = value)
+			}
+
+			function deserializeValue(value){
+				try{	
+					return value ?
+						value == 'true' || 
+						( value == 'false' ? false : 
+							value == 'null' ?  null :
+							+value + "" == value ? +value : 
+							/^[\[\{]/.test(value) ? $.parseJSON(value) :
+						  value )
+						: value
+				} catch(e){
+					return value;
+				}
+			}
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

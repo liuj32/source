@@ -5,7 +5,7 @@
 3. eventloop
 4. 前端工程化(能够编写（plugin和loader）
 5. 数据结构和算法
-6. 网路
+6. 网络
 7. 设计模式
 
 # 怎么学习JavaScript？
