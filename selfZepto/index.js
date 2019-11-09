@@ -278,7 +278,209 @@ var Zepto = (function(){
 				}
 			}
 
-			
+			$.type = type 
+			$.isFuntion = isFuntion
+			$.isWindow = isWindow
+			$.isArray = isArray
+			$.isPlainObject = isPlainObject
+
+			$.isEmptyObject = function(obj) {
+				var name 
+				for(name in obj) return false;
+				return true;
+			}
+
+			$.isNumeric = function(val) {
+				var num = Number(val), type = typeof val;
+				return val != null && type != 'boolean' &&
+						(type != 'string' || val.length) && 
+						!isNaN(num) && isFinite(num) || false;
+			}
+
+			$.inArray = function(elem, array, i){
+				return emptyArray.indexOf.call(array, elem, i);
+			}
+
+			$.camelCase = camelize
+			$.trim = function(str){
+				return str == null ? '' : String.prototype.trim.call(str);
+			}
+
+			//plugin compatibility
+			$.uuid = 0
+			$.support =  { }
+			$.expr = {}
+			$.noop = function() {}
+
+			$.map = function(elements, callback){
+				var value, values, i, key;
+				if(likeArray(elements))
+					for(i=0;i<elements.length;i++){
+						value = callback(elements[i], i);
+						if(value != null) values.push(value)
+					}
+				else
+					for(key in value){
+						value = callback(elements[key], key);
+						if(value != null) values.push(value)
+					}
+				return flatten(values);
+			}	
+
+			$.each = function(elements, callback){
+				var i, key;
+				if(likeArray(elements))
+					for(i=0;i<elements.length;i++){
+						if(callback(elements[i], i, elements[i]) == false) return elements;
+					}
+				else 
+					for(key in elements){
+						if(callback(elements[key], key, elements[key]) == false) return elements;
+					}
+				
+				return elements;
+			}
+					
+			$.grep = function(elements, callback){
+				return filter.call(elements, callback);
+			}
+
+			if(window.JSON) $.parseJSON = JSON.parse;
+
+			//Populate the class2type map
+			$.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name){
+				class2type[ "[object " + name + "]"] = name.toLowerCase();
+			})
+
+			//Define methods that will be available on all
+			//Zepto collections
+			$.fn = {
+				constructor: zepto.Z,
+				length: 0,
+
+				//Because a collection acts like an array 
+				//copy over these useful array functions. 
+				forEach: emptyArray.forEach,
+				reduce: emptyArray.reduce,
+				push: emptyArray.push,
+				sort: emptyArray.sort,
+				splice: emptyArray.splice,
+				indexOf: emptyArray.indexOf,
+				concat: function(){
+					var i, value, args = []
+					for(i=0;i<arguments.length;i++){
+						value = arguments[i];
+						args[i] = zepto.isZ(value) ? value.toArray() : value;
+					}
+					return concat(zepto.isZ(this) ? this.toArray() : this, args)
+				},
+
+				//`map` and `slice ` in the jquery 	API	work difference
+				//from their array counterparts
+				map: function(fn){
+					return $($.map(this, function(el, i){ return fn.call(el, i, el)}))
+				},
+				slice: function(){
+					return $(slice.apply(this, arguments))
+				},
+
+				ready: function(callback){
+					//don't use intereactive on IE<10(it can fired premature)
+					if(document.readyState === "complete" || 
+						(document.readyState !== "loading" && !document.documentElement.doScroll))
+						setTimeout(function(){ callback($)}, 0);
+					else {
+						var handle = function(){
+							document.removeEventListener("DOMContentLoaded", handle, false)
+							window.removeEventListener("load", handle, false)
+							callback($)
+						}
+						document.addEventListener('DOMContentLoaded', handle, false)
+						window.removeEventListener('load', handle, false)
+					}
+					return this;
+				},
+				get: function(idx){
+					return idx == undefined ? slice.call(this) : this[idx >=0 ? idx : idx+this.length]
+				},
+				toArray: function(){ return this.get() },
+				size: function(){
+					return this.length;
+				},
+				remove: function(){
+					return this.each(function(){
+						if(this.parentNode != null)
+							this.parentNode.removeChild(this);
+					})
+				},
+				each: function(callback){
+					emptyArray.every.call(this, function(el, idx){
+						return callback.call(el, idx, el) !== false;
+					})
+					return this;
+				},
+				filter: function(selector){
+					if(isFuntion(selector)) return this.not(this.not(selector))
+					return $(filter.call(this, function(element){
+						return zepto.matches(element, selector);
+					}))
+				},
+				add: function(selector){ 
+					return $(uniq(this.concat($(selector, context))));
+				},
+				is: function(selector){
+					return typeof selector == "string" ? this.length >0 && zepto.matches(this[0], selector) :
+						selector && this.selector == selector.selector;
+				},
+				not: function(selector){
+					var nodes = []
+					if(isFuntion(selector) && selector.call !== undefined)
+						this.each(function(idx){
+							if(!selector.call(this, idx)) nodes.push(this)
+						})
+					else {
+						var excludes = typeof selector == "string" ? this.filter(selector) : 
+							(likeArray(selector) && isFuntion(selector.item)) ? slice.call(selector) : $(selector)
+						this.forEach(function(el) {
+							if(excludes.indexOf(el) < 0) nodes.push(el)
+						})
+					}
+					return $(nodes);
+				},
+				has: function(selector){
+					return this.filter(function(){
+						return isObject(selector) ? 
+							$.contains(this, selector) : 
+							$(this).find(selector).size();
+					})
+				},
+				eq: function(idx){
+					return idx === -1 this.slice(idx) : this.slice(idx, +idx+1);
+				},
+				first: function(){
+					var el = this[0]
+					return el && isObject(el) ? el :  $(el);
+				},
+				last: function(){
+					var el = this[this.length - 1]
+					return el && isObject(el) ? el : $(el);
+				},
+				find: function(selector){
+					var result, $this = this 
+					if(!selector) result = $()
+					else if(typeof selector == 'object')
+						result = $(selector).filter(function(){
+							var node = this;
+							return emptyArray.some.call($this, function(parent){
+								return $.contains(parent, node);
+							})
+						})
+					else if(this.length == 1) result = $(zepto.qsa(this[0], selector))
+					else result = this.map(function(){ return zepto.qsa(this, selector)})
+					return result;
+				},
+				
+			}
 
 
 

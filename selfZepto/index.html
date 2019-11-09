@@ -8,9 +8,22 @@
 	<title>Document</title>
 <body>
 	<script src="./zepto.js"></script>
-	<script>
-		 console.log($('<div>'))
-	</script>
+	<form action="" id="myform">
+		<input type="text">
+		<select name="" id=""></select>
+	</form>
+
+<script type="text/javascript">
+	var form = $('#myform')
+	var form1 = document.querySelector('form')
+	console.log(form)
+	console.log(  form1.querySelectorAll('input, select, a')  )
+	console.log( 	form.find('input, select, a')  )
+
+	function type(arg) {
+		return Object.prototype.toString.call(arg)
+	  }
+</script>
 </body>
 
 </html>
