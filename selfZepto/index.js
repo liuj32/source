@@ -479,6 +479,138 @@ var Zepto = (function(){
 					else result = this.map(function(){ return zepto.qsa(this, selector)})
 					return result;
 				},
+				closest: function(selector, context){
+					var nodes = [], collection = typeof selector == 'object' &&  $(selector)
+					this.each(function(_, node){
+						while( node && !(collection ? collection.indexOf(node) >=0 : zepto.matches(node, selector)))
+							node = node !== context && !isDocument(node) && node.parentNode
+						if(node && nodes.indexOf(node) < 0) nodes.push(node)
+					})
+					return $(nodes);
+				},
+				parents: function(selector){
+					var ancestors = [], nodes = this;
+					while(nodes.length > 0)
+						nodes = $.map(nodes, function(node){
+							if((node = node.parentNode) && !isDocument(node) && ancestors.indexOf(node) < 0){
+								ancestors.push(node)
+								return node;
+							}
+						})
+					return filtered(ancestors, selector);
+				},
+				parent: function(selector){
+					return filtered(uniq(this.pluck('parentNode')), selector)
+				},
+				children: function(selector) { 
+					return filtered(this.map(function () { return children(this) }), selector)
+				},
+				contents: function(){
+					return this.map(function(){ this.contentDocument || slice.call(this.childNodes )})
+				},
+				sibliings: function(selector){
+					return filtered(this.map(function(i, el){
+						return filter.call(children(el.parentNode), function(child){ return child !== el})
+					}), selector)
+				},
+				empty: function(){
+					return this.each(function() { this.innerHtml = ''})
+				},
+				//`pluck` is borrowed from Prototype.js
+				pluck: function(property){
+					return $.map(this, function(el){ return el[property] })
+				},
+				show: function(){
+					return this.each(function(){
+						this.style.display == "none" && (this.style.display = '')
+						if(getComputedStyle(this, '').getPropertyValue("display") == "none")
+							this.style.display = defaultDisplay(this.nodeName)
+					})
+				},
+				replaceWith: function(newContent){
+					return this.before(newContent).remove();
+				},
+				wrap: function(){
+					var func = isFuntion(structure)
+					if(this[0] && !func){
+						var dom = $(structure).get(0),
+								clone = dom.parentNode || this.length > 1
+					}
+
+					return this.each(function(index){
+						$(this).wrapAll(
+							func ? structure.call(this, index) : 
+								clone ? dom.cloneNode(true) : dom
+						)
+					})
+				},
+				wrapAll: function(structure){
+					if(this[0])
+						$(this[0].before(structure = $(structure)))
+					var children 
+					//drill down to the inmost element
+					while((children = structure.children()).length) structure = children.first()
+					$(structure).append(this);
+				},
+        wrapInner: function(structure){
+					var func = isFuntion(structure)
+					return this.each(function(index){
+						var self = $(this), contents = self.contents();
+								dom = func ? structure.call(this, index) : structure;
+						contents.length ? contents.wrapAll(dom) : self.append(dom);
+					})
+				},
+				unwrap: function(){
+					this.parent().each(function(){
+						$(this).replaceWith($(this).children())
+					})
+					return this;
+				},
+				clone: function(){
+					return this.map(function(){ return this.cloneNode(true) })
+				},
+				hide: function(){
+					return this.css("display", "none")
+				},
+				toggle: function(setting){
+					return this.each(function(){
+						var el = $(this);
+						(setting == undefined ? el.css("display") == "none" : setting) ? el.show() : el.hide();
+					})
+				},
+				prev: function(selector){ return $(this.pluck('previousElementSibling')).filter(selector || '*')},
+				next: function(selector){ return $(this.pluck('nextElementSibling')).filter(selector || '*')},
+				html: function(html){
+					return 0 in arguments ?
+						this.each(function(idx){
+							var originHtml = this.innerHtml
+							$(this).empty().append( funcArg(this, html, idx, originHtml))
+						}) : 
+						(0 in this ? this[0].innerHTML : null)
+				},
+				text: function(text){
+					return 0 in arguments ? 
+						this.each(function(idx){
+							var newText = funcArg(this, text, idx, this.textContent)
+							this.textContent = newText == null ? '' : ''+newText 
+						}) : 
+						(0 in this ? this.pluck('textContent').join("") : null)
+				},
+				attr: function(name, value){
+					var result 
+					return (typeof name == 'string' && !(1 in arguments)) ? 
+						(0 in this && this[0].nodeType == 1 && (result = this[0].getAttribute(name)) != null ? result : undefined) : 
+						this.each(function(idx){
+							if(this.nodeType !== 1) return 
+							if(isObject(name)) for(key in name) setAttribute(this, key, name[key])
+							else setAttribute(this, name, funcArg(this, value, idx, this.getAttribute(name)))
+						})						
+				},
+				removeAttr: function(name){
+					return this.each(function(){ this.nodeType === 1 && name.split(' ').forEach(function(attribute){
+						setAttribute(this, attribute)
+					}, this)})
+				},
 				
 			}
 

@@ -7,19 +7,13 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Document</title>
 <body>
+	<a href="">222</a>
+	<a href="">333</a>
 	<script src="./zepto.js"></script>
-	<form action="" id="myform">
-		<input type="text">
-		<select name="" id=""></select>
-	</form>
-
 <script type="text/javascript">
-	var form = $('#myform')
-	var form1 = document.querySelector('form')
-	console.log(form)
-	console.log(  form1.querySelectorAll('input, select, a')  )
-	console.log( 	form.find('input, select, a')  )
-
+	
+  console.log( $('a').text() )
+	
 	function type(arg) {
 		return Object.prototype.toString.call(arg)
 	  }
