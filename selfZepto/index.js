@@ -611,7 +611,65 @@ var Zepto = (function(){
 						setAttribute(this, attribute)
 					}, this)})
 				},
+				prop: function(name, value){
+					name = propMap[name] || name 
+					return (typeof name == 'string' && !(1 in arguments)) ?
+						(this[0] && this[0][name]) : 
+						this.each(function(idx){
+							if(isObject(name)) for(key in name) this[propMap[key] || key] = name[key]
+							else this[name] = funcArg(this, value, idx, this[name])
+						})
+				},
+				removeProp: function(name){
+					name = propMap[name] || name 
+					return this.each(function(){ delete this[name]})
+				},
+				data: function(name, value){
+					var attrName = 'data-' + name.replace(capitalRE, '-$1').toLowerCase();
+
+					var data = (1 in arguments) ?
+						this.attr(attrName, value) :
+						this.attr(attrName)
+					
+					return data !== null ? deserializeValue(data) : undefined;
+				},
+				val: function(value){
+					if(0 in arguments) {
+						if(value == null) value = ""
+						return this.each(function(idx){
+							this.value = funcArg(this, value, idx, this.value);
+						})
+					}else {
+						return this[0] && (this[0].multiple ? 
+							$(this[0]).find('option').filter(function(){ return this.selected}).pluck('value') :
+							this[0].value)
+					}
+				},
+				offset: function(coordinates){
+					if(coordinates) return this.each(function(index){
+						var $this = $(this),
+								coords = funcArg(this, coordinates, index, $this.offset()),
+								parentOffset = $this.parentOffset().offset(),
+								props = {
+									top: coords.top - parentOffset.top,
+									left: coords.left - parentOffset.left
+								}
+						if($(this).css('position') == 'static') prop['position'] = 'relative'
+						$this.css(props)
+					})
+					if(!this.length) return null;
+					if(document.documentElement != this[0] && !$.contains(document.documentElement, this[0]))
+						return {top: 0, left: 0}
+					var obj = this[0].getBoundingClientRect()
+					return {
+						left: obj.left + window.pageXOffset,
+						top: obj.top + window.pageYOffset,						
+						width: Math.round(obj.width),
+						height: Math.round(obj.height)
+					}
+				},
 				
+
 			}
 
 

@@ -6,18 +6,42 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Document</title>
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+		}
+
+		.box {
+			width: 200px;
+			height: 100px;
+			border: 1px solid black;
+			position: relative;
+		}
+
+		.inner {
+			width: 50px;
+			height: 50px;
+			border: 1px solid red;
+			position: relative;
+			left: 20px;
+			top: 10px;
+		}
+	</style>
+
 <body>
-	<a href="">222</a>
-	<a href="">333</a>
+	<div class="box">
+		<div class="inner">asdf</div>
+	</div>
 	<script src="./zepto.js"></script>
-<script type="text/javascript">
-	
-  console.log( $('a').text() )
-	
-	function type(arg) {
-		return Object.prototype.toString.call(arg)
-	  }
-</script>
+	<script type="text/javascript">
+		// console.log( document.getElementsByClassName('inner')[0].getBoundingClientRect() )
+		// console.log( $('.box').offset() 
+
+		function type(arg) {
+			return Object.prototype.toString.call(arg)
+		}
+	</script>
 </body>
 
 </html>
