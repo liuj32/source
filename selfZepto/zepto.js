@@ -142,7 +142,7 @@ var Zepto = (function() {
 
     // A special case optimization for a single tag
     if (singleTagRE.test(html)) dom = $(document.createElement(RegExp.$1))
-
+    
     if (!dom) {
       if (html.replace) html = html.replace(tagExpanderRE, "<$1></$2>")
       if (name === undefined) name = fragmentRE.test(html) && RegExp.$1
@@ -162,7 +162,6 @@ var Zepto = (function() {
         else nodes.attr(key, value)
       })
     }
-
     return dom
   }
 
@@ -330,11 +329,12 @@ var Zepto = (function() {
     }
   }
 
-  $.type = type
-  $.isFunction = isFunction
+  $.type = type 
+  $.isFuntion = isFunction
   $.isWindow = isWindow
   $.isArray = isArray
   $.isPlainObject = isPlainObject
+
 
   $.isEmptyObject = function(obj) {
     var name
@@ -897,7 +897,7 @@ var Zepto = (function() {
           }),
           parent, copyByClone = this.length > 1
       if (nodes.length < 1) return this
-
+          console.log(nodes)
       return this.each(function(_, target){
         parent = inside ? target : target.parentNode
 
@@ -941,7 +941,7 @@ var Zepto = (function() {
   zepto.uniq = uniq
   zepto.deserializeValue = deserializeValue
   $.zepto = zepto
-
+  
   return $
 })()
 
