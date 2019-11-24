@@ -12,53 +12,18 @@
 			margin: 0;
 		}
 
-		.box {
-			width: 100px;
-			height: 200px;
-			border: 1px solid black;
-			word-break: break-all;
-			position: relative;
-		}
-		#tooltip{
-			width: 50px;
-			top: 10px;
-			margin-top: 30px;
-			height: 50px;
-			position: relative;
-			border: 1px solid red;
-		}
+
 	</style>
 
 <body>
-	<a id="tooltip">标题</a>
-	<div class="box"><a href="">222</a>1111</div>
-	<!-- <script src="./zepto.js"></script> -->
-	<script src="./zepto.js"></script>
+	<div class="box">233233</div>
+	
+	<script src="./src/zepto.js"></script>
+	<script src="./src/event.js"></script>
 	<script type="text/javascript">
 
-	
-// $('#tooltip').insertAfter('<p> after</p>')
-		var  fragmentRE = /^\s*<(\w+|!)[^>]*>/,
-				html = '<input type="button" value=""/>',
-				tagExpanderRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig
-				
-		// console.log( html.replace(tagExpanderRE, "<$1></$2>") )
-		var ele = document.getElementsByClassName('box')[0]
-		console.log( ele.children )
 
-		function type(arg) {
-			return Object.prototype.toString.call(arg)
-		}
 
-		function dasherize(str) {
-    return str.replace(/::/g, '/')
-           .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-           .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-           .replace(/_/g, '-')
-           .toLowerCase()
-	}
-
-var camelize = function(str){ return str.replace(/-+(.)?/g, function(match, chr){ return chr ? chr.toUpperCase() : '' }) }
 
 	</script>
 </body>
