@@ -5,16 +5,15 @@
 ;(function($){
   var _zid = 1, undefined,
       slice = Array.prototype.slice,
-      isFunction = $.isFunction,
+      isFunction = $.isFuntion,
       isString = function(obj){ return typeof obj == 'string' },
       handlers = {},
       specialEvents={},
       focusinSupported = 'onfocusin' in window,
       focus = { focus: 'focusin', blur: 'focusout' },
-      hover = { mouseenter: 'mouseover', mouseleave: 'mouseout' }
+      hover = { mouseenter: 'mouseover', mouseleave: 'mouseout' };
 
   specialEvents.click = specialEvents.mousedown = specialEvents.mouseup = specialEvents.mousemove = 'MouseEvents'
-
   function zid(element) {
     return element._zid || (element._zid = _zid++)
   }

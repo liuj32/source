@@ -11,20 +11,33 @@
 			padding: 0;
 			margin: 0;
 		}
-
-
 	</style>
 
 <body>
 	<div class="box">233233</div>
-	
+
 	<script src="./src/zepto.js"></script>
 	<script src="./src/event.js"></script>
 	<script type="text/javascript">
 
 
+		// var obj = { name: 'Zepto' },
+		// 	handler = function () { console.log("hello from + ", this.name) }
 
+		// // ensures that the handler will be executed in the context of `obj`:
+		// $.each(obj, function (name, predicate) {
+		// 	console.log(this)
+		// })
 
+	// add a handler for a custom event
+	$(document).on('mylib:change', function(e, from, to){
+		console.log('change on %o with data %s, %s', e.target, from, to)
+	})
+	$(document).on('mylib:change', function(e, from, to){
+		console.log('change1 on %o with data %s, %s', e.target, from, to)
+	})
+	// trigger the custom event
+	$(document.body).trigger('mylib:change', ['one', 'two'])
 	</script>
 </body>
 
