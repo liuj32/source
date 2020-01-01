@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./vendor/json2.js"></script>
+  <script src="./vendor/jquery.js"></script>
+  <script src="./vendor/underscore.js"></script>
+
+  <script src="./src/backbone.js"></script>
+  <!-- <script src="./backbone.js"></script> -->
+
+  <script src="./src/backbone.localStorage.js"></script>
+
+
+  <script>
+  
+  var a = {}
+  a.Events = {
+    on: function(){
+      console.log(this)
+    }
+  }
+  a.Events.on();
+  </script>
+  
+</body>
+</html>

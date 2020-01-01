@@ -1,12 +1,28 @@
-# 前端基础知识：
+# 前端基础知识
 
 1. javascript, html, css
 2. 操作dom
-3. eventloop
-4. 前端工程化(能够编写（plugin和loader）
-5. 数据结构和算法 (树和递归)
-6. 网络
-7. 设计模式
+3. 前端工程化(webpack编译过程、 能够编写（plugin和loader）
+4. 数据结构和算法 (树和递归)
+5. 网络(http2.0新特性、get和post区别)
+6. 设计模式
+
+# 浏览器相关
+
+1. 浏览器加载页面机制
+2. EventLoop
+3. 浏览器优化 
+
+
+
+# Vue部分
+
+1. vue的生命周期、子组件的生命周期和父组件的生命周期先后执行顺序
+2. Diff算法和virtual Dom
+3. MVC和MVVM、绑定实现方式
+4. 前端路由的实现方式
+5. vue SSR
+
 
 # 怎么学习JavaScript？
 
@@ -33,3 +49,4 @@
 5. jq.validate.js
 6. bootstrap
    轮播、分页、下拉框、表格、树等插件
+7. axios
